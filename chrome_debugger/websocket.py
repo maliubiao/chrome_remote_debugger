@@ -176,7 +176,7 @@ def parse_frame(context, data):
     frame_buffer = cStringIO.StringIO(data) 
 
     if context["expect"]:
-        if frame_buffer.tell() > context["expect"]:
+        if context["this_chunk_len"] > context["expect"]:
             if context["masked_frame"]:
                 masked_data = mask_data(context["mask"],
                         frame_buffer.read(context["expect"]))
@@ -191,6 +191,7 @@ def parse_frame(context, data):
                 masked_data = frame_buffer.read()
             context["frames"][-1] += masked_data
             context["expect"] -= context["this_chunk_len"]
+            frame_buffer.close()
             return
 
     #new frames in buffer
@@ -214,16 +215,17 @@ def parse_frame(context, data):
         if payloadlen < 126:         
             pass 
         if payloadlen == 126:
-            payloadlen = struct.unpack("!H", frame_buffer.read(2)[0]) 
+            payloadlen = struct.unpack("!H", frame_buffer.read(2))[0]
         elif payloadlen == 127:
-            payloadlen = struct.unpack("!I", frame_buffer.read(4)[0])
+            payloadlen = struct.unpack("!I", frame_buffer.read(4))[0]
         elif payloadlen > 127:
             raise Exception("Illegal payloadlen") 
 
         if context["masked_frame"]:
-            context["mask"] = frame_buffer.read(4)
-        if (context["this_chunk_len"] - frame_buffer.tell()) <= payloadlen: 
-            context["expect"] = payloadlen - context["this_chunk_len"] 
+            context["mask"] = frame_buffer.read(4) 
+        data_len = context["this_chunk_len"] - frame_buffer.tell()
+        if data_len <= payloadlen: 
+            context["expect"] = payloadlen - data_len
             if context["masked_frame"]: 
                 data = mask_data(context["mask"], frame_buffer.read())
             else:
@@ -237,3 +239,4 @@ def parse_frame(context, data):
             else:
                 data = frame_buffer.read(payloadlen)
             context["frames"].append(data) 
+    frame_buffer.close()         

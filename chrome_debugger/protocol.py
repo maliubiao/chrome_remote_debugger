@@ -40,5 +40,5 @@ def recv(context):
     while True: 
         websocket.parse_frame(parser, context["sock"].recv(4096))        
         if not parser["expect"]:
-            return "".join(parser["frames"]) 
+            return parser["frames"] 
 

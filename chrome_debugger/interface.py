@@ -7,8 +7,8 @@ def get_app_list(url):
         url += "json"
     else:
         url += "/json"
-    _, _, content = simple_http.get(url)
-    return json.loads(content)
+    _, _, data = simple_http.get(url)
+    return json.loads(data)
 
 def console_clear_messages(context):
     protocol.send_text(context, json.dumps({
@@ -26,14 +26,35 @@ def console_disable(context):
     protocol.send_text(context, json.dumps({
         "id": context["id"],
         "method": "Console.disable"
+        })) 
+
+def debugger_cansetscriptsource(context):    
+    protocol.send_text(context, json.dumps({
+        "id": context["id"],
+        "method": "Debugger.canSetScriptSource"
         }))
 
+def debugger_disable(context):
+    protocol.send_text(context, json.dumps({
+        "id": context["id"],
+        "method": "Debugger.disable"
+        }))
 
+def debugger_enable(context):
+    protocol.send_text(context, json.dumps({
+        "id": context["id"],
+        "method": "Debugger.enable"
+        }))
 
+def debugger_pause(context):
+    protocol.send_text(context, json.dumps({
+        "id": context["id"],
+        "method": "Debugger.pause"
+        }))
 
-
-
-
-
-
+def debugger_resume(context):
+    protocol.send_text(context, json.dumps({
+        "id": context["id"],
+        "method": "Debugger.resume"
+        }))
 
