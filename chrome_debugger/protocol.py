@@ -9,13 +9,17 @@ from chrome_debugger import websocket
 def connect(wsurl):
     context = websocket.gen_handshake(wsurl) 
     host = "localhost"
-    port = 9222
+    port = 9222 
     netloc = context["components"].netloc
     if ":" in netloc:
         host, port = netloc.split(":") 
         port = int(port) 
     sock = socket.create_connection((host, port))
     sock.send(context["header"]) 
+    context["response"] = websocket.parse_response(sock.recv(4096))
+    if context["response"]["Sec-WebSocket-Accept"] != websocket.gen_response_key(context["key"]):
+        sock.close()
+        raise ValueError("Incorrected Key")
     context["sock"] = sock
     context["id"] = 0
     return context 

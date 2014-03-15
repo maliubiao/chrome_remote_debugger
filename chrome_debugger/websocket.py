@@ -104,7 +104,7 @@ def parse_response(data):
         raise ValueError("HTTP 1.1 only")
     status = int(_status[1])
     if status != 101:
-        raise ValueError("Incompatible websocket version, 13/%d" % status) 
+        raise ValueError("Websocket connect failed, 13/%d" % status) 
     header = {}
     header["status"] = status
     mark = data.find("\x0d\x0a\x0d\x0a") 
@@ -202,7 +202,8 @@ def parse_frame(context, data):
         context["frame_opcode"] = header & 0xf
         context["frame_is_control"] = context["frame_opcode"] & 0x8 
 
-        if context["reserved"]:
+        if context["reserved"]: 
+            pdb.set_trace()
             raise ValueError("yet-undefined extensions") 
         context["masked_frame"] = bool(payloadlen & 0x80) 
 
@@ -217,7 +218,7 @@ def parse_frame(context, data):
         if payloadlen == 126:
             payloadlen = struct.unpack("!H", frame_buffer.read(2))[0]
         elif payloadlen == 127:
-            payloadlen = struct.unpack("!I", frame_buffer.read(4))[0]
+            payloadlen = struct.unpack("!Q", frame_buffer.read(8))[0]
         elif payloadlen > 127:
             raise Exception("Illegal payloadlen") 
 

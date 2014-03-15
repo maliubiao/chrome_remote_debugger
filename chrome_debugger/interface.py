@@ -58,3 +58,34 @@ def debugger_resume(context):
         "method": "Debugger.resume"
         }))
 
+def debugger_get_backtrace(context):
+    protocol.send_text(context, json.dumps({
+        "id": context["id"],
+        "method": "Debugger.getBacktrace"
+        }))
+
+def debugger_get_source(context, id):
+    protocol.send_text(context, json.dumps({ 
+        "id": context["id"],
+        "method": "Debugger.getScriptSource",
+        "params": {
+            "scriptId": id
+            }
+        }))
+
+def tracing_start(context):
+    protocol.send_text(context, json.dumps({
+        "id": context["id"],
+        "method": "Tracing.start",
+        "categories": ""
+        }))
+
+def tracing_end(context): 
+    protocol.send_text(context, json.dumps({
+        "id": context["id"],
+        "method": "Tracing.end"
+        }))
+
+
+
+
