@@ -27,12 +27,12 @@ def connect(wsurl):
 def send_text(context, data): 
     gen = websocket.gen_frame(True, websocket.TEXT, data)
     context["sock"].send(gen)
-    context["id"] += 1
+
 
 def send_binary(context, data): 
     gen = websocket.gen_frame(True, websocket.BINARY, data)
     context["sock"].send(gen)
-    context["id"] += 1
+
 
 def close(context, status, message):
     gen = websockeet.gen_frame(True, websocket.CLOSE,

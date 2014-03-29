@@ -203,7 +203,6 @@ def parse_frame(context, data):
         context["frame_is_control"] = context["frame_opcode"] & 0x8 
 
         if context["reserved"]: 
-            pdb.set_trace()
             raise ValueError("yet-undefined extensions") 
         context["masked_frame"] = bool(payloadlen & 0x80) 
 

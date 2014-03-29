@@ -7,7 +7,7 @@ google-chrome --remote-debugging-port=9222
 ```
 ###Demo
 ```shell
-In [1]: from chrome_debugger import interface
+In [1]: from cmdebug import interface
 
 In [2]: interface.get_app_list("localhost:9222")
 Out[2]: 

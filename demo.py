@@ -4,9 +4,9 @@ import sys
 import os.path
 import base64
 from pprint import pprint
-from chrome_debugger import protocol
-from chrome_debugger import interface
-from chrome_debugger import websocket
+from cmdebug import protocol
+from cmdebug import interface
+from cmdebug import websocket
 
 def get_scripts(context, params):
         if "url" not in params: 
@@ -23,6 +23,7 @@ def get_scripts(context, params):
             except:
                 pdb.set_trace()
             f.close() 
+            print "done: ", params["url"]
     
 def main(): 
     context = protocol.connect(sys.argv[1]) 
